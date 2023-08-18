@@ -198,6 +198,7 @@ public class GridSelector : MonoBehaviour
         instantiatedUnableGrids = new List<GameObject>();
         instantiatedBlockObjs = new List<GameObject>();
 
+        SearchPreventedBlocks();
         foreach (BlockInfo b in curMapData.defaultBlocks)
         {
             PlaceBlockObj(b);
@@ -205,8 +206,6 @@ public class GridSelector : MonoBehaviour
 
         nonBlockInfo = new BlockInfo { type = BlockType.NONE };
         selectedBlockInfo = nonBlockInfo;
-
-        SearchPreventedBlocks();
 
         hasInitialized = true;
     }
