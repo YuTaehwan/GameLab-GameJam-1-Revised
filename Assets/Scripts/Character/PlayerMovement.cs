@@ -50,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
     private float curTime;
     private Color newColor;
     private bool canMove;
+
+    private float cameraMoveTime = 1.5f;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -109,9 +112,8 @@ public class PlayerMovement : MonoBehaviour
         if (isMoveToStartPosition)
         {
             curTime += Time.deltaTime;
-            Debug.Log(curTime / 100f);
             gameObject.transform.position =
-                Vector3.Lerp(gameObject.transform.position, new Vector3(startX, startY, 0), curTime / 100f);
+                Vector3.Lerp(gameObject.transform.position, new Vector3(startX, startY, 0), curTime / cameraMoveTime);
         }
     }
 
@@ -240,31 +242,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
-    #region CoyoteTime
-    /*
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.collider.tag == "Ground" && rb.velocity.y <= 0)
-        {
-            isCoyoteTime = true;
-            StartCoroutine(Co_CoyoteTimer());
-        }
-        
-        if (collision.collider.tag == "Ground")
-        {
-            isWallSliding = false;
-        }
-    }
-
-    IEnumerator Co_CoyoteTimer()
-    {
-        yield return new WaitForSecondsRealtime(.02f);
-        isCoyoteTime = false;
-    }
-    */
-    #endregion
-    
-    
     #region Die
 
     void HandlingDie()
@@ -285,10 +262,10 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator MoveToStartPosition()
     {
         rb.bodyType = RigidbodyType2D.Static;
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         curTime = 0;
         isMoveToStartPosition = true;
-        yield return new WaitForSeconds(4.0f);
+        yield return new WaitForSeconds(1.5f);
         isDied = false;
         isMoveToStartPosition = false;
 

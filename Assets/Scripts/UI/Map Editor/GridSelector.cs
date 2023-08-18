@@ -39,6 +39,7 @@ public class GridSelector : MonoBehaviour
     private List<GameObject> instantiatedUnableGrids;
     private List<GameObject> instantiatedBlockObjs;
 
+    private Tilemap mainTilemap;
     private HashSet<Vector2Int> preventedBlocksSet;
     private Vector2Int minTileBound = new Vector2Int(-30, -30);
     private Vector2Int maxTileBound = new Vector2Int(120, 60);
@@ -202,8 +203,7 @@ public class GridSelector : MonoBehaviour
             PlaceBlockObj(b);
         }
 
-        nonBlockInfo = new BlockInfo();
-        nonBlockInfo.type = BlockType.NONE;
+        nonBlockInfo = new BlockInfo { type = BlockType.NONE };
         selectedBlockInfo = nonBlockInfo;
 
         SearchPreventedBlocks();
@@ -263,6 +263,20 @@ public class GridSelector : MonoBehaviour
         Vector3 endPos = GetEndGridPos(startPos, blockSize);
         Vector3 position = (startPos + endPos) / 2;
 
+        List<Vector2Int> preventTilesT = new List<Vector2Int>(); 
+        for (int i = 0 ; i < blockSize.x ; i++)
+        {
+            for (int j = 0 ; j < blockSize.y ; j++)
+            {
+                preventTilesT.Add(new Vector2Int(blockInfo.startGridPos.x + i, blockInfo.startGridPos.y + j));
+            }
+        }
+
+        foreach (Vector2Int t in preventTilesT)
+        {
+            preventedBlocksSet.Add(t);
+        }
+
         g.GetComponent<Transform>().position = position;
         g.GetComponent<BlockBase>().SetInitialPos(position);
 
@@ -282,6 +296,11 @@ public class GridSelector : MonoBehaviour
                     }
 
                     instantiatedUnableGrids = new List<GameObject>();
+                }
+
+                foreach (Vector2Int t in preventTilesT)
+                {
+                    preventedBlocksSet.Remove(t);
                 }
 
                 FinishEditMode();
@@ -423,19 +442,21 @@ public class GridSelector : MonoBehaviour
     {
         preventedBlocksSet = new HashSet<Vector2Int>();
 
-        GameObject preventedTileObj = GameObject.Find("PreventTilemap");
-        Tilemap preventedTilemap = preventedTileObj.GetComponent<Tilemap>();
+        mainTilemap = GameObject.Find("GroundTile").GetComponentInChildren<Tilemap>();
 
         for (int i = minTileBound.x; i < maxTileBound.x; i++)
         {
             for (int j = minTileBound.y; j < maxTileBound.y; j++)
             {
-                if (preventedTilemap.HasTile(new Vector3Int(i, j, 0)))
+                if (mainTilemap.HasTile(new Vector3Int(i, j, 0)))
                 {
                     preventedBlocksSet.Add(new Vector2Int(i, j));
                 }
             }
         }
+        
+        Vector3Int t = mainTilemap.WorldToCell(GameObject.Find("Player").transform.position);
+        preventedBlocksSet.Add(new Vector2Int(t.x, t.y));
     }
 
     private bool IsValidPositionToPlace(Vector2Int hoverPosition)
