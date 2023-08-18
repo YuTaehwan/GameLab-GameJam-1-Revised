@@ -9,24 +9,24 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/badarang/Scenes/Lobby.unity
+    path: Assets/Scenes/Lobby.unity
     guid: 2e2220e4dac5f794eaa795a21ac911b1
   - enabled: 1
-    path: Assets/badarang/Scenes/Stage1.unity
+    path: Assets/Scenes/Stage1.unity
     guid: 34cf2a30d82aee649bc174f3e8550869
   - enabled: 1
-    path: Assets/badarang/Scenes/Stage4.unity
+    path: Assets/Scenes/Stage4.unity
     guid: 73f96de74c43aa9499da76e37447cf2a
   - enabled: 1
-    path: Assets/badarang/Scenes/Stage5.unity
+    path: Assets/Scenes/Stage5.unity
     guid: dabc67ffb6a3a3f4ebebd1e0f85c0331
   - enabled: 0
     path: Assets/badarang/Scenes/Stage10.unity
     guid: 6791289d634e79d4cb04f1065ef6ae99
   - enabled: 1
-    path: Assets/badarang/Scenes/Stage2.unity
+    path: Assets/Scenes/Stage2.unity
     guid: d387135e18ede344fbcf3b14b9586f79
   - enabled: 1
-    path: Assets/badarang/Scenes/Stage3.unity
+    path: Assets/Scenes/Stage3.unity
     guid: 374c1a7819c91044180b6006c658d29f
   m_configObjects: {}
