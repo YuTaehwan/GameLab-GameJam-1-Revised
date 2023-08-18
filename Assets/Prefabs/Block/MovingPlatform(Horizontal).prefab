@@ -156,9 +156,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8297011467313994198}
   - component: {fileID: -4497052515524696822}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: MovingPlatform(Horizontal)
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -198,6 +198,7 @@ MonoBehaviour:
   isHalfRotated: 0
   rotation: 0
   startGridPos: {x: 0, y: 0, z: 0}
+  initialPos: {x: 0, y: 0, z: 0}
 --- !u!1 &8297011467435120228
 GameObject:
   m_ObjectHideFlags: 0

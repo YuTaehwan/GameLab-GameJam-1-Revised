@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 using TMPro;
+using Unity.VisualScripting;
 
 public class GridSelector : MonoBehaviour
 {
@@ -54,7 +55,7 @@ public class GridSelector : MonoBehaviour
         { BlockType.JUMP_LAUNCHER, new Vector2Int(3, 1) },
         { BlockType.NORMAL, new Vector2Int(3, 1) },
         { BlockType.ROTATION, new Vector2Int(1, 1) },
-        { BlockType.FERRIS, new Vector2Int(6, 6) },
+        { BlockType.FERRIS, new Vector2Int(7, 6) },
         { BlockType.CONVEYOR, new Vector2Int(4, 1) },
         { BlockType.SPIKE_SMALL, new Vector2Int(1, 1) },
         { BlockType.SPIKE_BIG, new Vector2Int(3, 1) },
@@ -240,7 +241,7 @@ public class GridSelector : MonoBehaviour
             bimg.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0, 0, blockInfo.rotation));
         } else
         {
-            b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = "����";
+            b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = "삭제하기";
 
             GameObject bimg = Instantiate(deleteButtonImagePrefab);
             bimg.GetComponent<RectTransform>().SetParent(b.GetComponent<RectTransform>());
