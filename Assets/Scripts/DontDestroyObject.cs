@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DontDestroyObject : MonoBehaviour
@@ -60,6 +61,11 @@ public class DontDestroyObject : MonoBehaviour
         return _gameManager.playMode == PlayMode.EDIT;
     }
 
+    public bool IsPlayMode()
+    {
+        return _gameManager.playMode == PlayMode.PLAY;
+    }
+
     public void GoLobby()
     {
         _gameManager.GoLobby();
@@ -80,6 +86,11 @@ public class DontDestroyObject : MonoBehaviour
         {
             shoudSceneLoad = false;
             StartCoroutine(_gameManager.LoadScene(targetStage));
+        }
+
+        if (_gameManager.playMode == PlayMode.STAGE_ENTER) {
+            _gameManager.playMode = PlayMode.STAGE_SHOW;
+            StartCoroutine(_gameManager.ShowStage());
         }
     }
 }

@@ -65,22 +65,20 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        canMove = !DontDestroyObject.Instance.IsEditMode();
+        canMove = DontDestroyObject.Instance.IsPlayMode();
         if (canMove) moveInput = Input.GetAxisRaw("Horizontal");
         else moveInput = 0;
         if (moveInput != 0) gameObject.transform.SetParent(null);
         isGrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, groundLayer) || Physics2D.OverlapCircle(feetPos.position, checkRadius, wallLayer);
         if (dirtCreateDelay > 0f)
         {
-            dirtCreateDelay -= .01f;
+            dirtCreateDelay -= Time.deltaTime;
         }
         
         if (isGrounded && moveInput != 0 && dirtCreateDelay <= 0 && Mathf.Abs(rb.velocity.x) > 1.1f)
         {
-            dirtCreateDelay = 1.0f;
-            GameObject particle = Instantiate(dirtParticle, rb.transform.position + new Vector3(isFacingRight ? -.5f : .5f, -.5f, 0), transform.rotation);
-            ParticleSystem particlesys = particle.GetComponent<ParticleSystem>();
-            particlesys.Play();
+            dirtCreateDelay = 0.2f;
+            PlayDirtParticle();
         }
         
         if (canMove && (isGrounded || isCoyoteTime) && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)))
@@ -169,9 +167,13 @@ public class PlayerMovement : MonoBehaviour
         {
             wallJumpingCounter -= Time.deltaTime;
         }
-
+        
         if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)) && wallJumpingCounter > 0f)
         {
+            GameObject particle = Instantiate(dirtParticle, rb.transform.position + new Vector3(isFacingRight ? .5f : -.5f, -.5f, 0), transform.rotation);
+            ParticleSystem particlesys = particle.GetComponent<ParticleSystem>();
+            particlesys.startSize = 1.0f;
+            particlesys.Play();
             audioSource.PlayOneShot(jumpSound);
             isWallJumping = true;
             rb.velocity = new Vector2(wallJumpingDirection * wallJumpingSpeed.x, wallJumpingSpeed.y);
@@ -216,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
             if (!isDied) HandlingDie();
         }
     }
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.tag == "Ground")
@@ -242,6 +244,31 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
+    #region CoyoteTime
+    /*
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.tag == "Ground" && rb.velocity.y <= 0)
+        {
+            isCoyoteTime = true;
+            StartCoroutine(Co_CoyoteTimer());
+        }
+        
+        if (collision.collider.tag == "Ground")
+        {
+            isWallSliding = false;
+        }
+    }
+
+    IEnumerator Co_CoyoteTimer()
+    {
+        yield return new WaitForSecondsRealtime(.02f);
+        isCoyoteTime = false;
+    }
+    */
+    #endregion
+    
+    
     #region Die
 
     void HandlingDie()
@@ -250,7 +277,8 @@ public class PlayerMovement : MonoBehaviour
         GameObject particle = Instantiate(testParticleSystem, rb.transform.position + new Vector3(0f, 0f, 0f), transform.rotation);
         ParticleSystem particlesys = particle.GetComponent<ParticleSystem>();
         particlesys.Play();
-
+        //GameObject.FindWithTag("MainCamera").GetComponent<CameraFollow>().VibrateForTime(.2f);
+        
         //gameObject.SetActive(false);
         newColor.a = 0f;
         spr.color = newColor;
@@ -266,6 +294,10 @@ public class PlayerMovement : MonoBehaviour
         curTime = 0;
         isMoveToStartPosition = true;
         yield return new WaitForSeconds(1.5f);
+        newColor.a = 1f;
+        spr.color = newColor;
+        eye1.color = new Color(1f, 1f, 1f, 1f);
+        eye2.color = new Color(1f, 1f, 1f, 1f);
         isDied = false;
         isMoveToStartPosition = false;
 
@@ -274,14 +306,8 @@ public class PlayerMovement : MonoBehaviour
          */
 
         gameManager.EditMode();
-
-        //yield return new 
-        
+        //yield return new
         rb.bodyType = RigidbodyType2D.Dynamic;
-        newColor.a = 1f;
-        spr.color = newColor;
-        eye1.color = new Color(1f, 1f, 1f, 1f);
-        eye2.color = new Color(1f, 1f, 1f, 1f);
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -299,4 +325,16 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
     
+    
+    #region Particle
+
+    void PlayDirtParticle()
+    {
+        GameObject particle = Instantiate(dirtParticle, rb.transform.position + new Vector3(isFacingRight ? -.5f : .5f, -.5f, 0), transform.rotation);
+        ParticleSystem particlesys = particle.GetComponent<ParticleSystem>();
+        particlesys.Play();
+    }
+    
+    
+    #endregion
 }

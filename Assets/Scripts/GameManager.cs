@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager
 {
+    public const float STAGE_SHOW_TIME = 1f;
+    public const float SHOW_FLAG_TIME = .8f;
+    public const float SHOW_CHARACTER_TIME = .5f;
+
     private GridSelector gridSelector;
 
     public PlayMode playMode;
@@ -19,8 +23,12 @@ public class GameManager
 
     private int deathCount;
 
+    public int curStage;
+
     public void StartStage(int stageNum)
     {
+        curStage = stageNum;
+
         gridSelector = UnityEngine.Object.FindObjectOfType<GridSelector>();
         gridSelector.InitSelectionUI(stageNum);
 
@@ -30,7 +38,8 @@ public class GameManager
 
         deathCount = -1;
 
-        EditMode();
+        selectionUI.SetActive(false);
+        playMode = PlayMode.STAGE_ENTER;
     }
 
     public void EditMode()
@@ -88,6 +97,32 @@ public class GameManager
         StartStage(stageNum);
     }
 
+    public IEnumerator ShowStage() {
+        GameObject lobbyButton = GameObject.Find("GoToLobby");
+        lobbyButton.SetActive(false);
+
+        playCamera.transform.position = GameObject.Find("Flag").transform.position;
+        yield return new WaitForSeconds(SHOW_FLAG_TIME);
+        Vector3 flagPos = GameObject.Find("Flag").transform.position;
+        Vector3 playerPos = GameObject.Find("Player").transform.position;
+        playCamera.SetShowStage(flagPos);
+        yield return new WaitUntil(() => {
+            return 
+                playCamera.transform.position.x <= playerPos.x + 0.01f &&
+                playCamera.transform.position.x >= playerPos.x - 0.01f &&
+                playCamera.transform.position.y <= playerPos.y + 0.01f &&
+                playCamera.transform.position.y >= playerPos.y - 0.01f;
+        });
+        playCamera.FinishShowStage();
+        yield return new WaitForSeconds(SHOW_CHARACTER_TIME);
+
+        lobbyButton.SetActive(true);
+        EditMode();
+        if (curStage == 0) {
+            ExitEditMode();
+        }
+    }
+
     public void RegisterExitEditorCallback(Action callback)
     {
         OnExitEditModeCallbacks += callback;
@@ -98,7 +133,9 @@ public enum PlayMode
 {
     LOBBY,
     PLAY,
-    EDIT
+    EDIT,
+    STAGE_ENTER,
+    STAGE_SHOW
 }
 
 public enum SceneLoadState
