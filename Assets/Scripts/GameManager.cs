@@ -11,8 +11,10 @@ public class GameManager
     public const float SHOW_CHARACTER_TIME = .5f;
 
     private GridSelector gridSelector;
+    public GridSelector gridSelectorObj => gridSelector;
 
-    public PlayMode playMode;
+    private PlayMode _playMode;
+    public PlayMode playMode => _playMode;
     public SceneLoadState loadState;
 
     private CameraFollow playCamera;
@@ -39,12 +41,12 @@ public class GameManager
         deathCount = -1;
 
         selectionUI.SetActive(false);
-        playMode = PlayMode.STAGE_ENTER;
+        _playMode = PlayMode.STAGE_ENTER;
     }
 
     public void EditMode()
     {
-        playMode = PlayMode.EDIT;
+        _playMode = PlayMode.EDIT;
 
         playCamera.enabled = false;
         editCamera.enabled = true;
@@ -61,7 +63,7 @@ public class GameManager
     
     public void ExitEditMode()
     {
-        playMode = PlayMode.PLAY;
+        _playMode = PlayMode.PLAY;
 
         playCamera.enabled = true;
         editCamera.Init();
@@ -73,13 +75,13 @@ public class GameManager
 
     public void Init()
     {
-        playMode = PlayMode.LOBBY;
+        _playMode = PlayMode.LOBBY;
         loadState = SceneLoadState.ENDLOAD;
     }
 
     public void GoLobby()
     {
-        playMode = PlayMode.LOBBY;
+        _playMode = PlayMode.LOBBY;
         SceneManager.LoadScene("Lobby");
     }
 
@@ -98,8 +100,7 @@ public class GameManager
     }
 
     public IEnumerator ShowStage() {
-        GameObject lobbyButton = GameObject.Find("GoToLobby");
-        lobbyButton.SetActive(false);
+        _playMode = PlayMode.STAGE_SHOW;
 
         playCamera.transform.position = GameObject.Find("Flag").transform.position;
         yield return new WaitForSeconds(SHOW_FLAG_TIME);
@@ -115,10 +116,9 @@ public class GameManager
         });
         playCamera.FinishShowStage();
         yield return new WaitForSeconds(SHOW_CHARACTER_TIME);
-
-        lobbyButton.SetActive(true);
+        
         EditMode();
-        if (curStage == 0) {
+        if (curStage == 1) {
             ExitEditMode();
         }
     }

@@ -36,7 +36,7 @@ public class ChangeScore : MonoBehaviour
         if (isPlaying)
         {
             timeStamp += Time.deltaTime;
-            Debug.Log(Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 100, 0), timeStamp / playTime));
+            //Debug.Log(Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 100, 0), timeStamp / playTime));
             gameObject.GetComponent<RectTransform>().anchoredPosition = Vector3.Lerp(new Vector3(0, 0, 0), new Vector3(0, 100, 0), timeStamp / playTime);
             if (timeStamp > playTime)
             {

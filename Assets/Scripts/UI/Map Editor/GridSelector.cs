@@ -78,6 +78,9 @@ public class GridSelector : MonoBehaviour
     private BlockInfo deleteButtonInfo;
     private BlockInfo nonBlockInfo;
 
+    private List<Button> _blockButtons = new List<Button>();
+    public List<Button> blockButtons { get => _blockButtons; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -231,6 +234,8 @@ public class GridSelector : MonoBehaviour
             SetBlock(blockInfo1_);
         });
 
+        blockButtons.Add(b.GetComponent<Button>());
+
         if (blockInfo.type != BlockType.DELETE)
         {
             b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = blockBtnNameData[blockInfo.type];
@@ -240,7 +245,7 @@ public class GridSelector : MonoBehaviour
             bimg.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0, 0, blockInfo.rotation));
         } else
         {
-            b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = "삭제하기";
+            b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = "블록 삭제";
 
             GameObject bimg = Instantiate(deleteButtonImagePrefab);
             bimg.GetComponent<RectTransform>().SetParent(b.GetComponent<RectTransform>());

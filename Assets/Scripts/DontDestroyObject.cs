@@ -89,7 +89,6 @@ public class DontDestroyObject : MonoBehaviour
         }
 
         if (_gameManager.playMode == PlayMode.STAGE_ENTER) {
-            _gameManager.playMode = PlayMode.STAGE_SHOW;
             StartCoroutine(_gameManager.ShowStage());
         }
     }

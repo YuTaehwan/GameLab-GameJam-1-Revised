@@ -172,7 +172,8 @@ public class PlayerMovement : MonoBehaviour
         {
             GameObject particle = Instantiate(dirtParticle, rb.transform.position + new Vector3(isFacingRight ? .5f : -.5f, -.5f, 0), transform.rotation);
             ParticleSystem particlesys = particle.GetComponent<ParticleSystem>();
-            particlesys.startSize = 1.0f;
+            var main = particlesys.main;
+            main.startSize = 1.0f; 
             particlesys.Play();
             audioSource.PlayOneShot(jumpSound);
             isWallJumping = true;
@@ -270,6 +271,10 @@ public class PlayerMovement : MonoBehaviour
     
     
     #region Die
+
+    public void Die() {
+        HandlingDie();
+    }
 
     void HandlingDie()
     {
