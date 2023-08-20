@@ -1,7 +1,7 @@
 {
     "defaultBlocks": [
-	{
-            "type": 12,
+        {
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 90,
             "startGridPos": {
@@ -11,7 +11,7 @@
             }
         },
         {
-            "type": 12,
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 90,
             "startGridPos": {
@@ -21,7 +21,7 @@
             }
         },
         {
-            "type": 12,
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 90,
             "startGridPos": {
@@ -31,7 +31,7 @@
             }
         },
         {
-            "type": 12,
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 90,
             "startGridPos": {
@@ -41,7 +41,7 @@
             }
         },
         {
-            "type": 12,
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 270,
             "startGridPos": {
@@ -51,7 +51,7 @@
             }
         },
         {
-            "type": 12,
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 270,
             "startGridPos": {
@@ -61,7 +61,7 @@
             }
         },
         {
-            "type": 12,
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 270,
             "startGridPos": {
@@ -71,7 +71,17 @@
             }
         },
         {
-            "type": 12,
+            "type": 11,
+            "isHalfRotated": true,
+            "rotation": 270,
+            "startGridPos": {
+                "x": 4,
+                "y": 12,
+                "z": 0
+            }
+        },
+        {
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 270,
             "startGridPos": {
@@ -82,16 +92,6 @@
         },
         {
             "type": 12,
-            "isHalfRotated": true,
-            "rotation": 270,
-            "startGridPos": {
-                "x": 4,
-                "y": 12,
-                "z": 0
-            }
-        },
-        {
-            "type": 13,
             "isHalfRotated": false,
             "rotation": 180,
             "startGridPos": {
@@ -101,7 +101,7 @@
             }
         },
         {
-            "type": 13,
+            "type": 12,
             "isHalfRotated": false,
             "rotation": 180,
             "startGridPos": {
@@ -111,7 +111,7 @@
             }
         },
         {
-            "type": 13,
+            "type": 12,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -121,7 +121,7 @@
             }
         },
         {
-            "type": 13,
+            "type": 12,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -131,7 +131,7 @@
             }
         },
         {
-            "type": 10,
+            "type": 9,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -151,7 +151,7 @@
             }
         },
         {
-            "type": 9,
+            "type": 8,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -161,7 +161,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -171,7 +171,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -181,7 +181,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -191,7 +191,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": true,
             "rotation": 270,
             "startGridPos": {
@@ -201,7 +201,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": true,
             "rotation": 270,
             "startGridPos": {
@@ -211,7 +211,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -221,7 +221,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -231,7 +231,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -241,7 +241,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -291,7 +291,7 @@
             }
         },
         {
-            "type": 14,
+            "type": 13,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -301,7 +301,7 @@
             }
         },
         {
-            "type": 14,
+            "type": 13,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -311,7 +311,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -321,7 +321,7 @@
             }
         },
         {
-            "type": 15,
+            "type": 14,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -331,7 +331,7 @@
             }
         },
         {
-            "type": 5,
+            "type": 4,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -341,7 +341,7 @@
             }
         },
         {
-            "type": 5,
+            "type": 4,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -351,7 +351,7 @@
             }
         },
         {
-            "type": 13,
+            "type": 12,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -361,7 +361,7 @@
             }
         },
         {
-            "type": 13,
+            "type": 12,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -371,7 +371,7 @@
             }
         },
         {
-            "type": 13,
+            "type": 12,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -381,7 +381,7 @@
             }
         },
         {
-            "type": 11,
+            "type": 10,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -391,7 +391,7 @@
             }
         },
         {
-            "type": 11,
+            "type": 10,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -401,7 +401,7 @@
             }
         }
     ],
-"installableBlocks": [
+    "installableBlocks": [
         {
             "type": 2,
             "isHalfRotated": false,
@@ -423,7 +423,7 @@
             }
         },
         {
-            "type": 10,
+            "type": 9,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -433,7 +433,7 @@
             }
         },
         {
-            "type": 9,
+            "type": 8,
             "isHalfRotated": false,
             "rotation": 0,
             "startGridPos": {
@@ -453,4 +453,4 @@
             }
         }
     ]
-    }
+}

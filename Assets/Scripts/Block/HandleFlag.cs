@@ -22,6 +22,7 @@ public class HandleFlag : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         animator.SetTrigger("Flag");
+        DontDestroyObject.gameManager.GiveStar();
         StartCoroutine("Particle");
     }
     

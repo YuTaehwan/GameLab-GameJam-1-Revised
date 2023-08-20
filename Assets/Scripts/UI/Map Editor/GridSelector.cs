@@ -10,18 +10,6 @@ using Unity.VisualScripting;
 
 public class GridSelector : MonoBehaviour
 {
-    [SerializeField]
-    public List<GameObject> btnImgPrefabs;
-
-    [SerializeField]
-    public List<GameObject> allObjPrefabs;
-
-    [SerializeField]
-    public List<BlockType> blockTypes;
-
-    [SerializeField]
-    public List<string> blockString;
-
     public GameObject selectGridPrefab;
     public GameObject unableGridPrefab;
 
@@ -45,31 +33,6 @@ public class GridSelector : MonoBehaviour
     private Vector2Int maxTileBound = new Vector2Int(120, 60);
 
     public GameObject clickedParticle;
-
-    [SerializeField]
-    public readonly Dictionary<BlockType, Vector2Int> blockSizeData = new Dictionary<BlockType, Vector2Int>()
-    {
-        { BlockType.JUMP, new Vector2Int(1, 1) },
-        { BlockType.MOVE_HORIZONTAL, new Vector2Int(6, 1) },
-        { BlockType.MOVE_VERTICAL, new Vector2Int(2, 5) },
-        { BlockType.FALL, new Vector2Int(2, 1) },
-        { BlockType.JUMP_LAUNCHER, new Vector2Int(3, 1) },
-        { BlockType.NORMAL, new Vector2Int(3, 1) },
-        { BlockType.ROTATION, new Vector2Int(1, 1) },
-        { BlockType.FERRIS, new Vector2Int(7, 6) },
-        { BlockType.CONVEYOR, new Vector2Int(4, 1) },
-        { BlockType.SPIKE_SMALL, new Vector2Int(1, 1) },
-        { BlockType.SPIKE_BIG, new Vector2Int(3, 1) },
-        { BlockType.OIL_PRESS, new Vector2Int(1, 1) },
-        { BlockType.STICKY, new Vector2Int(3, 1) },
-        { BlockType.BOW, new Vector2Int(1, 1) },
-        { BlockType.NONE, new Vector2Int(0, 0) },
-        { BlockType.DELETE, new Vector2Int(0, 0) },
-    };
-
-    private Dictionary<BlockType, GameObject> blockObjectData;
-    private Dictionary<BlockType, GameObject> blockBtnImgData;
-    private Dictionary<BlockType, string> blockBtnNameData;
 
     private MapLoader mapLoader;
     private MapData curMapData;
@@ -116,10 +79,11 @@ public class GridSelector : MonoBehaviour
                     instantiatedSelectGrids = new List<GameObject>();
 
                     Vector3 targetPos = selectionTilemap.GetCellCenterWorld(hoverPos);
+                    BlockData blockData = DontDestroyObject.blockManager.GetBlockData(selectedBlockInfo.type);
                     Vector2Int blockSize = 
                         selectedBlockInfo.isHalfRotated ? 
-                        new Vector2Int(blockSizeData[selectedBlockInfo.type].y, blockSizeData[selectedBlockInfo.type].x) : 
-                        blockSizeData[selectedBlockInfo.type];
+                        new Vector2Int(blockData.size.y, blockData.size.x) : 
+                        blockData.size;
                     Vector3 startPos = GetStartGridPos(targetPos, blockSize);
 
                     for (int i = 0; i < blockSize.x; i++)
@@ -149,10 +113,11 @@ public class GridSelector : MonoBehaviour
                 if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && isValidToPlace)
                 {
                     Vector3 targetPos = selectionTilemap.GetCellCenterWorld(hoverPos);
+                    BlockData blockData = DontDestroyObject.blockManager.GetBlockData(selectedBlockInfo.type);
                     Vector2Int blockSize = 
                         selectedBlockInfo.isHalfRotated ? 
-                        new Vector2Int(blockSizeData[selectedBlockInfo.type].y, blockSizeData[selectedBlockInfo.type].x) : 
-                        blockSizeData[selectedBlockInfo.type];
+                        new Vector2Int(blockData.size.y, blockData.size.x) : 
+                        blockData.size;
                     selectedBlockInfo.startGridPos = selectionTilemap.WorldToCell(GetStartGridPos(targetPos, blockSize));
                     PlaceBlockObj(selectedBlockInfo);
                     FinishEditMode();
@@ -167,23 +132,6 @@ public class GridSelector : MonoBehaviour
     
     public void InitSelectionUI(int level)
     {
-        blockObjectData = new Dictionary<BlockType, GameObject>();
-        blockBtnImgData = new Dictionary<BlockType, GameObject>();
-        blockBtnNameData = new Dictionary<BlockType, string>();
-
-        // Initialize all blocks info
-        if (allObjPrefabs.Count != blockTypes.Count || allObjPrefabs.Count != btnImgPrefabs.Count)
-        {
-            Debug.LogError("Number of block object prefabs(" + allObjPrefabs.Count + ") is not match with block types(" + blockTypes.Count + ")");
-        }
-
-        for (int i = 0; i < allObjPrefabs.Count; i++)
-        {
-            blockObjectData.Add(blockTypes[i], allObjPrefabs[i]);
-            blockBtnImgData.Add(blockTypes[i], btnImgPrefabs[i]);
-            blockBtnNameData.Add(blockTypes[i], blockString[i]);
-        }
-
         mapLoader = GetComponent<MapLoader>();
         curMapData = mapLoader.LoadMap(level - 1);
 
@@ -238,9 +186,10 @@ public class GridSelector : MonoBehaviour
 
         if (blockInfo.type != BlockType.DELETE)
         {
-            b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = blockBtnNameData[blockInfo.type];
+            BlockData blockData = DontDestroyObject.blockManager.GetBlockData(blockInfo.type);
+            b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = blockData.korean_name;
 
-            GameObject bimg = Instantiate(blockBtnImgData[blockInfo.type]);
+            GameObject bimg = Instantiate(blockData.btnImgPrefab);
             bimg.GetComponent<RectTransform>().SetParent(b.GetComponent<RectTransform>());
             bimg.GetComponent<RectTransform>().SetAsFirstSibling();
             bimg.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0, 0, blockInfo.rotation));
@@ -255,15 +204,16 @@ public class GridSelector : MonoBehaviour
 
     private void PlaceBlockObj(BlockInfo blockInfo)
     {
-        GameObject g = Instantiate(blockObjectData[blockInfo.type]);
+        BlockData blockData = DontDestroyObject.blockManager.GetBlockData(blockInfo.type);
+        GameObject g = Instantiate(blockData.prefab);
         g.GetComponent<BlockBase>().SetBlockRotation(blockInfo.isHalfRotated, blockInfo.rotation);
         g.GetComponent<BlockBase>().SetStartGridPos(blockInfo.startGridPos);
         g.GetComponent<Transform>().rotation = Quaternion.Euler(new Vector3(0, 0, blockInfo.rotation));
 
         Vector2Int blockSize = 
             blockInfo.isHalfRotated ? 
-            new Vector2Int(blockSizeData[blockInfo.type].y, blockSizeData[blockInfo.type].x) : 
-            blockSizeData[blockInfo.type]; 
+            new Vector2Int(blockData.size.y, blockData.size.x) : 
+            blockData.size; 
         Vector3 startPos = selectionTilemap.GetCellCenterWorld(blockInfo.startGridPos);
         Vector3 endPos = GetEndGridPos(startPos, blockSize);
         Vector3 position = (startPos + endPos) / 2;
@@ -288,7 +238,7 @@ public class GridSelector : MonoBehaviour
         IDeletable deletable = g.GetComponent<IDeletable>();
         if (deletable != null)
         {
-            deletable.InitDeletable(blockSizeData[blockInfo.type]);
+            deletable.InitDeletable(blockData.size);
             deletable.SetOnDeleteCallback((target) => {
                 instantiatedBlockObjs.Remove(target);
                 Destroy(target);
@@ -466,10 +416,11 @@ public class GridSelector : MonoBehaviour
 
     private bool IsValidPositionToPlace(Vector2Int hoverPosition)
     {
+        BlockData blockData = DontDestroyObject.blockManager.GetBlockData(selectedBlockInfo.type);
         Vector2Int blockSize =
             selectedBlockInfo.isHalfRotated ?
-            new Vector2Int(blockSizeData[selectedBlockInfo.type].y, blockSizeData[selectedBlockInfo.type].x) :
-            blockSizeData[selectedBlockInfo.type];
+            new Vector2Int(blockData.size.y, blockData.size.x) :
+            blockData.size;
 
         Vector2Int startBlockPos = hoverPosition - (blockSize / 2);
 
@@ -492,12 +443,11 @@ public enum BlockType
     NONE = 0,
     DELETE,
     JUMP,
-    MOVE_HORIZONTAL,
-    MOVE_VERTICAL,
+    MOVE_H,
+    MOVE_V,
     FALL,
-    JUMP_LAUNCHER,
     NORMAL,
-    ROTATION,
+    ROTATE,
     FERRIS,
     CONVEYOR,
     SPIKE_SMALL,

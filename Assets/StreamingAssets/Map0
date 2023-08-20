@@ -1,7 +1,7 @@
 {
     "defaultBlocks": [
         {
-            "type": 12,
+            "type": 11,
             "isHalfRotated": true,
             "rotation": 90,
             "startGridPos": {

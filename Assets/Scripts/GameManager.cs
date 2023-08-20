@@ -22,14 +22,70 @@ public class GameManager
     private GameObject selectionUI;
 
     private Action OnExitEditModeCallbacks;
+    public Action<int, int> OnGiveStarCallbacks;
 
     private int deathCount;
 
     public int curStage;
+    public int curMaxCoin;
+    public int curUsedCoin;
+
+    public List<StageFileData> stageDataList = new List<StageFileData>();
+    public int allStarCount = 0;
+    public int levelCleared = 0;
+
+    public void Init()
+    {
+        _playMode = PlayMode.LOBBY;
+        loadState = SceneLoadState.ENDLOAD;
+
+        SaveFileData saveData = DontDestroyObject.gameFileManager.LoadSaveData();
+        stageDataList = saveData.stageDatas;
+        allStarCount = saveData.allStarCount;
+        levelCleared = saveData.levelCleared;
+    }
+
+    public void SaveGame() {
+        SaveFileData saveData = new SaveFileData
+        {
+            allStarCount = allStarCount,
+            stageDatas = stageDataList,
+            levelCleared = levelCleared
+        };
+
+        DontDestroyObject.gameFileManager.SaveGameData(saveData);
+    }
+
+    public StageFileData GetStageData(int stageNum)
+    {
+        foreach (var stageData in stageDataList)
+        {
+            if (stageData.stageNum == stageNum)
+            {
+                return stageData;
+            }
+        }
+
+        return new StageFileData();
+    }
+    
+    public void SetStageData(StageFileData stageData)
+    {
+        for (int i = 0; i < stageDataList.Count; i++)
+        {
+            if (stageDataList[i].stageNum == stageData.stageNum)
+            {
+                stageDataList[i] = stageData;
+                return;
+            }
+        }
+    }
 
     public void StartStage(int stageNum)
     {
         curStage = stageNum;
+        curMaxCoin = GetStageData(stageNum).initCoin;
+        curUsedCoin = 0;
 
         gridSelector = UnityEngine.Object.FindObjectOfType<GridSelector>();
         gridSelector.InitSelectionUI(stageNum);
@@ -71,12 +127,6 @@ public class GameManager
         selectionUI.SetActive(false);
 
         OnExitEditModeCallbacks?.Invoke();
-    }
-
-    public void Init()
-    {
-        _playMode = PlayMode.LOBBY;
-        loadState = SceneLoadState.ENDLOAD;
     }
 
     public void GoLobby()
@@ -126,6 +176,33 @@ public class GameManager
     public void RegisterExitEditorCallback(Action callback)
     {
         OnExitEditModeCallbacks += callback;
+    }
+
+    public void GiveStar() {
+        StageFileData stageData = GetStageData(curStage);
+
+        int giveStar;
+        if (curMaxCoin - curUsedCoin < stageData.starBasis[0]) {
+            giveStar = 1;
+        } else if (curMaxCoin - curUsedCoin < stageData.starBasis[1]) {
+            giveStar = 2;
+        } else {
+            giveStar = 3;
+        }
+
+        int originalStar = stageData.stageStars;
+        if (originalStar == 0)
+            levelCleared = curStage;
+
+        if (originalStar < giveStar)
+            stageData.stageStars = giveStar;
+
+        OnGiveStarCallbacks?.Invoke(originalStar, giveStar);
+        
+        SetStageData(stageData);
+        allStarCount += giveStar - originalStar;
+        
+        SaveGame();
     }
 }
 

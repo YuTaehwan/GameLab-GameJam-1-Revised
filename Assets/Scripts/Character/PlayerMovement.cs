@@ -245,31 +245,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
-    #region CoyoteTime
-    /*
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.collider.tag == "Ground" && rb.velocity.y <= 0)
-        {
-            isCoyoteTime = true;
-            StartCoroutine(Co_CoyoteTimer());
-        }
-        
-        if (collision.collider.tag == "Ground")
-        {
-            isWallSliding = false;
-        }
-    }
-
-    IEnumerator Co_CoyoteTimer()
-    {
-        yield return new WaitForSecondsRealtime(.02f);
-        isCoyoteTime = false;
-    }
-    */
-    #endregion
-    
-    
     #region Die
 
     public void Die() {

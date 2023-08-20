@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 
 public class DontDestroyObject : MonoBehaviour
 {
@@ -20,6 +22,37 @@ public class DontDestroyObject : MonoBehaviour
         }
     }
 
+    private static GameManager _gameManager = new GameManager();
+    public static GameManager gameManager
+    {
+        get
+        {
+            return _gameManager;
+        }
+    }
+
+    private static BlockManager _blockManager = new BlockManager();
+    public static BlockManager blockManager
+    {
+        get
+        {
+            return _blockManager;
+        }
+    }
+
+    private static GameFileManager _gameFileManager = new GameFileManager();
+    public static GameFileManager gameFileManager
+    {
+        get
+        {
+            return _gameFileManager;
+        }
+    }
+
+    private bool shoudSceneLoad;
+    private int targetStage;
+    public bool gameInitialized = false;
+
     private void Awake()
     {
         if (instance == null)
@@ -33,13 +66,22 @@ public class DontDestroyObject : MonoBehaviour
             return;
         }
 
+        gameInitialized = false;
         InitOtherManagers();
         shoudSceneLoad = false;
     }
 
-    private void InitOtherManagers()
+    public void Update()
     {
-        _gameManager.Init();
+        if (shoudSceneLoad)
+        {
+            shoudSceneLoad = false;
+            StartCoroutine(_gameManager.LoadScene(targetStage));
+        }
+
+        if (_gameManager.playMode == PlayMode.STAGE_ENTER) {
+            StartCoroutine(_gameManager.ShowStage());
+        }
     }
 
     private static void SetupInstance()
@@ -47,13 +89,12 @@ public class DontDestroyObject : MonoBehaviour
         instance = FindObjectOfType<DontDestroyObject>();
     }
 
-    private static GameManager _gameManager = new GameManager();
-    public static GameManager gameManager
+    private void InitOtherManagers()
     {
-        get
-        {
-            return _gameManager;
-        }
+        _gameManager.Init();
+        _blockManager.Init();
+
+        gameInitialized = true;
     }
 
     public bool IsEditMode()
@@ -75,21 +116,5 @@ public class DontDestroyObject : MonoBehaviour
     {
         targetStage = stageNum;
         shoudSceneLoad = true;
-    }
-
-    private bool shoudSceneLoad;
-    private int targetStage;
-
-    public void Update()
-    {
-        if (shoudSceneLoad)
-        {
-            shoudSceneLoad = false;
-            StartCoroutine(_gameManager.LoadScene(targetStage));
-        }
-
-        if (_gameManager.playMode == PlayMode.STAGE_ENTER) {
-            StartCoroutine(_gameManager.ShowStage());
-        }
     }
 }
