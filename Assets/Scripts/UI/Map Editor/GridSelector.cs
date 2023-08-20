@@ -242,6 +242,7 @@ public class GridSelector : MonoBehaviour
 
             GameObject bimg = Instantiate(blockBtnImgData[blockInfo.type]);
             bimg.GetComponent<RectTransform>().SetParent(b.GetComponent<RectTransform>());
+            bimg.GetComponent<RectTransform>().SetAsFirstSibling();
             bimg.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0, 0, blockInfo.rotation));
         } else
         {
