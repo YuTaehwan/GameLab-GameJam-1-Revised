@@ -200,9 +200,22 @@ public class GameManager
         OnGiveStarCallbacks?.Invoke(originalStar, giveStar);
         
         SetStageData(stageData);
-        allStarCount += giveStar - originalStar;
+        if (giveStar > originalStar)
+            allStarCount += giveStar - originalStar;
         
         SaveGame();
+    }
+
+    public void ResetCoin() {
+        curUsedCoin = 0;
+    }
+
+    public void UseCoin(int coin) {
+        curUsedCoin += coin;
+    }
+
+    public void RefundCoin(int coin) {
+        curUsedCoin -= coin;
     }
 }
 

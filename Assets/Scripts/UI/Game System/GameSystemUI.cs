@@ -7,6 +7,7 @@ public class GameSystemUI : MonoBehaviour
     [SerializeField] private GameObject goLobbyButtonObj;
     [SerializeField] private GameObject editButtonObj;
     [SerializeField] private GameObject statPanelObj;
+    [SerializeField] private GameObject coinPanelObj;
     [SerializeField] private GameObject blockInfoButtonObj;
 
     [SerializeField] private GameObject blockInfoPanelObj;
@@ -19,6 +20,7 @@ public class GameSystemUI : MonoBehaviour
         goLobbyButtonObj.SetActive(false);
         editButtonObj.SetActive(false);
         statPanelObj.SetActive(true);
+        coinPanelObj.SetActive(false);
         blockInfoButtonObj.SetActive(true);
         blockInfoPanelObj.SetActive(false);
 
@@ -35,16 +37,19 @@ public class GameSystemUI : MonoBehaviour
                 goLobbyButtonObj.SetActive(false);
                 editButtonObj.SetActive(false);
                 statPanelObj.SetActive(true);
+                coinPanelObj.SetActive(false);
                 blockInfoButtonObj.SetActive(true);
             } else if (curPlayMode == PlayMode.EDIT) {
                 goLobbyButtonObj.SetActive(true);
                 editButtonObj.SetActive(false);
                 statPanelObj.SetActive(true);
+                coinPanelObj.SetActive(true);
                 blockInfoButtonObj.SetActive(true);
             } else if (curPlayMode == PlayMode.PLAY) {
                 goLobbyButtonObj.SetActive(true);
                 editButtonObj.SetActive(true);
                 statPanelObj.SetActive(true);
+                coinPanelObj.SetActive(false);
                 blockInfoButtonObj.SetActive(true);
             }
         }

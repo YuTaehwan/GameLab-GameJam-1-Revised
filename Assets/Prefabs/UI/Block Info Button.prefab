@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2373509088641328051}
   - component: {fileID: 2373509088641328060}
   - component: {fileID: 2373509088641328061}
+  - component: {fileID: 3429874771370585089}
   m_Layer: 5
   m_Name: Block Info Button
   m_TagString: Untagged
@@ -123,6 +124,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3429874771370585089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2373509088641328063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58464f523d75ed5468aee414e654c145, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockPriceText: {fileID: 1078983504353676811}
+  button: {fileID: 2373509088641328061}
 --- !u!1 &2373509088810902375
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,8 +206,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uBC84\uD2BC"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b6ee91326e2a4f640969f2ca02074a61, type: 2}
-  m_sharedMaterial: {fileID: 1068792376329164214, guid: b6ee91326e2a4f640969f2ca02074a61, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 104529b5ab6f6df4f9ec1d78e586d95e, type: 2}
+  m_sharedMaterial: {fileID: 177475701404272677, guid: 104529b5ab6f6df4f9ec1d78e586d95e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -222,7 +237,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 0
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -326,8 +341,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uD544\uC694\uD55C \uBCC4: 0"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b6ee91326e2a4f640969f2ca02074a61, type: 2}
-  m_sharedMaterial: {fileID: 1068792376329164214, guid: b6ee91326e2a4f640969f2ca02074a61, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 104529b5ab6f6df4f9ec1d78e586d95e, type: 2}
+  m_sharedMaterial: {fileID: 177475701404272677, guid: 104529b5ab6f6df4f9ec1d78e586d95e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -357,7 +372,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 0
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

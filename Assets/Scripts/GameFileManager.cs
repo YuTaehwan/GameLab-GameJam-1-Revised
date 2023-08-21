@@ -35,10 +35,11 @@ public class GameFileManager
                 name = blockFileData.name,
                 korean_name = blockFileData.korean_name,
                 price = blockFileData.price,
+                needStar = blockFileData.needStar,
                 size = blockFileData.size,
                 prefab = Resources.Load<GameObject>(BLOCK_PREFAB_PATH + blockFileData.type.ToString()),
                 btnImgPrefab = Resources.Load<GameObject>(BLOCK_BTN_IMG_PREFAB_PATH + blockFileData.type.ToString()),
-                btnImg = Resources.Load<Image>(BLOCK_BTN_IMG_PATH + blockFileData.type.ToString())
+                btnImg = Resources.Load<Sprite>(BLOCK_BTN_IMG_PATH + blockFileData.type.ToString())
             };
 
             blockDataList.Add(blockData);

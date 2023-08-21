@@ -19,6 +19,9 @@ public class GridSelector : MonoBehaviour
     public Tilemap selectionTilemap;
     public RectTransform selectionButtonPanel;
 
+    public GameObject coinUsePanel;
+    public RectTransform canvasRect;
+
     private Vector3Int hoverPos;
     private Vector3Int prevHoverPos;
     private BlockInfo selectedBlockInfo;
@@ -48,13 +51,23 @@ public class GridSelector : MonoBehaviour
     void Start()
     {
         hasInitialized = false;
+        coinUsePanel.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
         if (hasInitialized && DontDestroyObject.Instance.IsEditMode()) {
-            if (selectedBlockInfo.type != BlockType.NONE && selectedBlockInfo.type != BlockType.DELETE)
+            if (Input.GetMouseButtonDown(1) && selectedBlockInfo.type != BlockType.DELETE)
+            {
+                selectedBlockInfo = nonBlockInfo;
+            }
+
+            if (selectedBlockInfo.type == BlockType.NONE || EventSystem.current.IsPointerOverGameObject()) {
+                coinUsePanel.SetActive(false);
+            }
+
+            if (selectedBlockInfo.type != BlockType.NONE && selectedBlockInfo.type != BlockType.DELETE && !EventSystem.current.IsPointerOverGameObject())
             {
                 if (instantiatedUnableGrids.Count != 0)
                 {
@@ -104,6 +117,12 @@ public class GridSelector : MonoBehaviour
                                     startPos.y + selectionTilemap.cellSize.y * j,
                                     startPos.z
                                 );
+
+                            // SHOW COIN USE PANEL
+                            if (i == blockSize.x - 1 && j == 0)
+                            {
+                                ShowCoinUsePanel(g.GetComponent<Transform>().position, -blockData.price);
+                            }
                         }
                     }
 
@@ -114,19 +133,24 @@ public class GridSelector : MonoBehaviour
                 {
                     Vector3 targetPos = selectionTilemap.GetCellCenterWorld(hoverPos);
                     BlockData blockData = DontDestroyObject.blockManager.GetBlockData(selectedBlockInfo.type);
-                    Vector2Int blockSize = 
+                    if (DontDestroyObject.gameManager.curMaxCoin - DontDestroyObject.gameManager.curUsedCoin >= blockData.price) {
+                        Vector2Int blockSize = 
                         selectedBlockInfo.isHalfRotated ? 
-                        new Vector2Int(blockData.size.y, blockData.size.x) : 
-                        blockData.size;
-                    selectedBlockInfo.startGridPos = selectionTilemap.WorldToCell(GetStartGridPos(targetPos, blockSize));
-                    PlaceBlockObj(selectedBlockInfo);
-                    FinishEditMode();
+                            new Vector2Int(blockData.size.y, blockData.size.x) : 
+                            blockData.size;
+                        selectedBlockInfo.startGridPos = selectionTilemap.WorldToCell(GetStartGridPos(targetPos, blockSize));
+                        PlaceBlockObj(selectedBlockInfo, false);
+                        DontDestroyObject.gameManager.UseCoin(blockData.price);
+                        //FinishEditMode();
+                    }
                 }
             }
             else
             {
                 InitSelectionUIObjs();
             }
+        } else {
+            coinUsePanel.SetActive(false);
         }
     }
     
@@ -140,8 +164,10 @@ public class GridSelector : MonoBehaviour
             AddButton(b);
         }
 
-        deleteButtonInfo = new BlockInfo();
-        deleteButtonInfo.type = BlockType.DELETE;
+        deleteButtonInfo = new BlockInfo
+        {
+            type = BlockType.DELETE
+        };
         AddButton(deleteButtonInfo);
 
         // Initialize private values
@@ -149,11 +175,7 @@ public class GridSelector : MonoBehaviour
         instantiatedUnableGrids = new List<GameObject>();
         instantiatedBlockObjs = new List<GameObject>();
 
-        SearchPreventedBlocks();
-        foreach (BlockInfo b in curMapData.defaultBlocks)
-        {
-            PlaceBlockObj(b);
-        }
+        ResetEditor();
 
         nonBlockInfo = new BlockInfo { type = BlockType.NONE };
         selectedBlockInfo = nonBlockInfo;
@@ -169,40 +191,28 @@ public class GridSelector : MonoBehaviour
         }
 
         selectedBlockInfo = blockInfo;
+        if (blockInfo.type == BlockType.DELETE)
+        {
+            coinUsePanel.SetActive(false);
+        }
 
         SetDeletableFlag(blockInfo.type == BlockType.DELETE);
     }
 
     private void AddButton(BlockInfo blockInfo)
     {
-        GameObject b = Instantiate(selectButtonPrefab);
-        b.GetComponent<RectTransform>().SetParent(selectionButtonPanel);
+        GameObject b = Instantiate(selectButtonPrefab, selectionButtonPanel);
+        
         BlockInfo blockInfo1_ = blockInfo;
-        b.GetComponent<Button>().onClick.AddListener(() => {
+
+        b.GetComponent<BlockSelectButton>().Init(blockInfo, () => {
             SetBlock(blockInfo1_);
-        });
+        }, deleteButtonImagePrefab);
 
         blockButtons.Add(b.GetComponent<Button>());
-
-        if (blockInfo.type != BlockType.DELETE)
-        {
-            BlockData blockData = DontDestroyObject.blockManager.GetBlockData(blockInfo.type);
-            b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = blockData.korean_name;
-
-            GameObject bimg = Instantiate(blockData.btnImgPrefab);
-            bimg.GetComponent<RectTransform>().SetParent(b.GetComponent<RectTransform>());
-            bimg.GetComponent<RectTransform>().SetAsFirstSibling();
-            bimg.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0, 0, blockInfo.rotation));
-        } else
-        {
-            b.transform.Find("BlockName").GetComponent<TextMeshProUGUI>().text = "블록 삭제";
-
-            GameObject bimg = Instantiate(deleteButtonImagePrefab);
-            bimg.GetComponent<RectTransform>().SetParent(b.GetComponent<RectTransform>());
-        }
     }
 
-    private void PlaceBlockObj(BlockInfo blockInfo)
+    private void PlaceBlockObj(BlockInfo blockInfo, bool isDefault)
     {
         BlockData blockData = DontDestroyObject.blockManager.GetBlockData(blockInfo.type);
         GameObject g = Instantiate(blockData.prefab);
@@ -234,12 +244,24 @@ public class GridSelector : MonoBehaviour
 
         g.GetComponent<Transform>().position = position;
         g.GetComponent<BlockBase>().SetInitialPos(position);
+        g.GetComponent<BlockBase>().InitializeBlock(blockInfo.startGridPos, blockInfo.isHalfRotated, blockInfo.rotation, position, isDefault);
 
         IDeletable deletable = g.GetComponent<IDeletable>();
         if (deletable != null)
         {
             deletable.InitDeletable(blockData.size);
             deletable.SetOnDeleteCallback((target) => {
+                if (selectedBlockInfo.type != BlockType.DELETE) {
+                    return;
+                }
+
+                if (isDefault && DontDestroyObject.gameManager.curMaxCoin - DontDestroyObject.gameManager.curUsedCoin < blockData.price)
+                {
+                    return;
+                }
+
+                coinUsePanel.SetActive(false);
+
                 instantiatedBlockObjs.Remove(target);
                 Destroy(target);
 
@@ -258,10 +280,19 @@ public class GridSelector : MonoBehaviour
                     preventedBlocksSet.Remove(t);
                 }
 
-                FinishEditMode();
+                if (isDefault) {
+                    DontDestroyObject.gameManager.UseCoin(blockData.price);
+                } else {
+                    DontDestroyObject.gameManager.RefundCoin(blockData.price);
+                }
+                //FinishEditMode();
             });
 
             deletable.SetOnHoverCallback((target) => {
+                if (selectedBlockInfo.type != BlockType.DELETE) {
+                    return;
+                }
+
                 if (instantiatedBlockObjs.Contains(target))
                 {
                     if (instantiatedUnableGrids.Count > 0)
@@ -287,6 +318,11 @@ public class GridSelector : MonoBehaviour
                                     startPos.y + selectionTilemap.cellSize.y * j,
                                     startPos.z
                                 );
+
+                            if (i == blockSize.x - 1 && j == 0)
+                            {
+                                ShowCoinUsePanel(g.GetComponent<Transform>().position, isDefault ? -blockData.price : blockData.price);
+                            }
                         }
                     }
                 }
@@ -302,6 +338,10 @@ public class GridSelector : MonoBehaviour
                     }
 
                     instantiatedUnableGrids = new List<GameObject>();
+                }
+
+                if (selectedBlockInfo.type == BlockType.DELETE) {
+                    coinUsePanel.SetActive(false);
                 }
             });
         }
@@ -435,6 +475,42 @@ public class GridSelector : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void ResetEditor() {
+        foreach (var block in instantiatedBlockObjs) {
+            Destroy(block);
+        }
+        instantiatedBlockObjs = new List<GameObject>();
+
+        SearchPreventedBlocks();
+        foreach (BlockInfo b in curMapData.defaultBlocks)
+        {
+            PlaceBlockObj(b, true);
+        }
+
+        DontDestroyObject.gameManager.ResetCoin();
+    }
+
+    private void ShowCoinUsePanel(Vector3 targetPos, int price) {
+        Vector2 viewportPos = Camera.main.WorldToViewportPoint(targetPos);
+        Vector2 screenPos = new Vector2(
+            viewportPos.x * canvasRect.sizeDelta.x - (canvasRect.sizeDelta.x * 0.5f) + 10,
+            viewportPos.y * canvasRect.sizeDelta.y - (canvasRect.sizeDelta.y * 0.5f) - 70
+        );
+
+        coinUsePanel.SetActive(true);
+        coinUsePanel.GetComponent<RectTransform>().anchoredPosition = screenPos;
+        coinUsePanel.GetComponentInChildren<TextMeshProUGUI>().text = (price >= 0 ? "+" : "") + price.ToString();
+
+        if (price < 0 && DontDestroyObject.gameManager.curMaxCoin - DontDestroyObject.gameManager.curUsedCoin < -price)
+        {
+            coinUsePanel.GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 0.3f, 0.3f, 1);
+        }
+        else
+        {
+            coinUsePanel.GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 1, 1, 1);
+        }
     }
 }
 

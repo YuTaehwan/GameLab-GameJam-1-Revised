@@ -10,6 +10,7 @@ public class BlockBase : MonoBehaviour
     public int rotation;
     public Vector3Int startGridPos;
     public Vector3 initialPos;
+    public bool isDefaultBlock;
 
     public void SetStartGridPos(Vector3Int startGridPos)
     {
@@ -25,5 +26,13 @@ public class BlockBase : MonoBehaviour
     public void SetInitialPos(Vector3 pos)
     {
         initialPos = pos;
+    }
+
+    public void InitializeBlock(Vector3Int startGridPos, bool isHalfRotated, int rotation, Vector3 initialPos, bool isDefaultBlock)
+    {
+        SetStartGridPos(startGridPos);
+        SetBlockRotation(isHalfRotated, rotation);
+        SetInitialPos(initialPos);
+        this.isDefaultBlock = isDefaultBlock;
     }
 }

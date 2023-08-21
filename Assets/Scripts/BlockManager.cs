@@ -32,8 +32,9 @@ public struct BlockData {
     public string name;
     public string korean_name;
     public int price;
+    public int needStar;
     public Vector2Int size;
     public GameObject prefab;
     public GameObject btnImgPrefab;
-    public Image btnImg;
+    public Sprite btnImg;
 }
