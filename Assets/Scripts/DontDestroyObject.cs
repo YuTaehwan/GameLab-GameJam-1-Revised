@@ -1,11 +1,4 @@
-using System;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEditor.SceneManagement;
 
 public class DontDestroyObject : MonoBehaviour
 {
@@ -110,6 +103,10 @@ public class DontDestroyObject : MonoBehaviour
     public void GoLobby()
     {
         _gameManager.GoLobby();
+    }
+
+    public void Sandbox() {
+        _gameManager.Sandbox();
     }
 
     public void LoadScene(int stageNum)

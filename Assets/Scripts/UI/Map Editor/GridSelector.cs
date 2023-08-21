@@ -47,6 +47,9 @@ public class GridSelector : MonoBehaviour
     private List<Button> _blockButtons = new List<Button>();
     public List<Button> blockButtons { get => _blockButtons; }
 
+    public Tile tileA;
+    public Tile tileB;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -164,6 +167,27 @@ public class GridSelector : MonoBehaviour
             AddButton(b);
         }
 
+        mainTilemap = GameObject.Find("GroundTile").GetComponentInChildren<Tilemap>();
+        for (int i = minTileBound.x; i < maxTileBound.x; i++)
+        {
+            for (int j = minTileBound.y; j < maxTileBound.y; j++)
+            {
+                if (curMapData.mainMaps.Contains(new Vector3Int(i, j, 0))) {
+                    mainTilemap.SetTile(new Vector3Int(i, j, 0), tileA);
+                } else if (curMapData.mainMaps.Contains(new Vector3Int(i, j, 1))) {
+                    mainTilemap.SetTile(new Vector3Int(i, j, 0), tileB);
+                } else {
+                    mainTilemap.SetTile(new Vector3Int(i, j, 0), null);
+                }
+            }
+        }
+
+        GameObject.Find("Player").transform.position = selectionTilemap.CellToWorld(new Vector3Int(curMapData.playerPos.x, curMapData.playerPos.y, 0));
+        GameObject.Find("Flag").transform.position = selectionTilemap.CellToWorld(new Vector3Int(curMapData.flagPos.x, curMapData.flagPos.y, 0)) + new Vector3(1.1f, 1.6f, -10f);
+
+        GameObject.Find("Player").GetComponent<PlayerMovement>().startX = GameObject.Find("Player").transform.position.x;
+        GameObject.Find("Player").GetComponent<PlayerMovement>().startY = GameObject.Find("Player").transform.position.y;
+
         deleteButtonInfo = new BlockInfo
         {
             type = BlockType.DELETE
@@ -202,12 +226,12 @@ public class GridSelector : MonoBehaviour
     private void AddButton(BlockInfo blockInfo)
     {
         GameObject b = Instantiate(selectButtonPrefab, selectionButtonPanel);
-        
+
         BlockInfo blockInfo1_ = blockInfo;
 
         b.GetComponent<BlockSelectButton>().Init(blockInfo, () => {
             SetBlock(blockInfo1_);
-        }, deleteButtonImagePrefab);
+        }, new GameObject[] { deleteButtonImagePrefab });
 
         blockButtons.Add(b.GetComponent<Button>());
     }
@@ -530,7 +554,11 @@ public enum BlockType
     SPIKE_BIG,
     OIL_PRESS,
     STICKY,
-    BOW
+    BOW,
+    TILE_A,
+    TILE_B,
+    PLAYER,
+    FLAG
 }
 
 [Serializable]

@@ -100,6 +100,13 @@ public class GameManager
         _playMode = PlayMode.STAGE_ENTER;
     }
 
+    public void Sandbox() {
+        _playMode = PlayMode.SANDBOX;
+        SceneManager.LoadScene("Sandbox");
+
+        editCamera = UnityEngine.Object.FindObjectOfType<UICameraControl>();
+    }
+
     public void EditMode()
     {
         _playMode = PlayMode.EDIT;
@@ -225,7 +232,8 @@ public enum PlayMode
     PLAY,
     EDIT,
     STAGE_ENTER,
-    STAGE_SHOW
+    STAGE_SHOW,
+    SANDBOX,
 }
 
 public enum SceneLoadState

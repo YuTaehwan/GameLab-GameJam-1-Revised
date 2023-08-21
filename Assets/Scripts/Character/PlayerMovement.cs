@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip jumpSound;
     public AudioSource audioSource;
     public SpriteRenderer spr, eye1, eye2;
-    private float startX, startY;
+    public float startX, startY;
     private float curTime;
     private Color newColor;
     private bool canMove;

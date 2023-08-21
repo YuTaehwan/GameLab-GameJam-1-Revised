@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stage3.unity
     guid: 374c1a7819c91044180b6006c658d29f
+  - enabled: 1
+    path: Assets/Scenes/Sandbox.unity
+    guid: 2e1e4a1bcad1cc14bab7b29ee8c7a710
   m_configObjects: {}

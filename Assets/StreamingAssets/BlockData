@@ -16,7 +16,7 @@
             "name": "MOVE_H",
             "korean_name": "가로 이동",
             "price": 2,
-            "needStar": 5,
+            "needStar": 9,
             "size": {
                 "x": 6,
                 "y": 1
@@ -26,8 +26,8 @@
             "type": 4,
             "name": "MOVE_V",
             "korean_name": "세로 이동",
-            "price": 2,
-            "needStar": 5,
+            "price": 3,
+            "needStar": 6,
             "size": {
                 "x": 2,
                 "y": 5
@@ -38,7 +38,7 @@
             "name": "FALL",
             "korean_name": "낙하",
             "price": 1,
-            "needStar": 3,
+            "needStar": 6,
             "size": {
                 "x": 2,
                 "y": 1
@@ -48,8 +48,8 @@
             "type": 6,
             "name": "NORMAL",
             "korean_name": "일반",
-            "price": 1,
-            "needStar": 2,
+            "price": 3,
+            "needStar": 3,
             "size": {
                 "x": 3,
                 "y": 1
@@ -60,7 +60,7 @@
             "name": "ROTATE",
             "korean_name": "회전",
             "price": 1,
-            "needStar": 7,
+            "needStar": 3,
             "size": {
                 "x": 1,
                 "y": 1
@@ -70,7 +70,7 @@
             "type": 8,
             "name": "FERRIS",
             "korean_name": "관람차",
-            "needStar": 9,
+            "needStar": 12,
             "price": 3,
             "size": {
                 "x": 7,
@@ -81,7 +81,7 @@
             "type": 9,
             "name": "CONVEYOR",
             "korean_name": "컨베이어",
-            "price": 2,
+            "price": 3,
             "needStar": 12,
             "size": {
                 "x": 4,

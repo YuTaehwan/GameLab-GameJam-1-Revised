@@ -14,7 +14,7 @@ public class BanMoveInEditMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (DontDestroyObject.Instance.IsEditMode())
+        if (DontDestroyObject.Instance.IsEditMode() || DontDestroyObject.gameManager.playMode == PlayMode.SANDBOX)
         {
             transform.rotation = Quaternion.identity;
         }
